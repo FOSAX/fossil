@@ -1,0 +1,39 @@
+[package]
+name = "fossil-cli"
+version = "0.1.0"
+edition = "2021"
+description = "Ship software that can still be rebuilt in 50 years."
+license = "Apache-2.0"
+repository = "https://github.com/FOSAX/fossil"
+readme = "README.md"
+keywords = ["embedded", "firmware", "reproducible-builds", "archive", "signing"]
+categories = ["command-line-utilities", "development-tools::build-utils"]
+
+[[bin]]
+name = "fossil"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+blake3 = "1"
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+rand = "0.8"
+walkdir = "2"
+tar = "0.4"
+flate2 = "1"
+chrono = { version = "0.4", features = ["serde"] }
+anyhow = "1"
+hex = "0.4"
+tempfile = "3"
+which = "6"
+colored = "2"
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+[profile.release]
+opt-level = "z"
+lto = true

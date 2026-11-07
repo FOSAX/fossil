@@ -1,0 +1,34 @@
+name: "Fossil"
+description: "Seal, verify or replay a firmware project with Fossil inside a CI workflow."
+author: "Fossil contributors"
+branding:
+  icon: "box"
+  color: "gray-dark"
+
+inputs:
+  command:
+    description: "Fossil subcommand to run: seal, verify, replay, inspect, diff or explain."
+    required: true
+  args:
+    description: "Arguments passed as-is to the subcommand (e.g. './firmware --hardware \"ARM Cortex-M4\"')."
+    required: false
+    default: ""
+  version:
+    description: "Fossil release to install (tag, e.g. v0.1.0). Defaults to the latest release."
+    required: false
+    default: "latest"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install fossil
+      shell: bash
+      env:
+        FOSSIL_VERSION: ${{ inputs.version }}
+      run: |
+        curl -fsSL https://raw.githubusercontent.com/FOSAX/fossil/main/install.sh | sh
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+    - name: Run fossil ${{ inputs.command }}
+      shell: bash
+      run: fossil ${{ inputs.command }} ${{ inputs.args }}
